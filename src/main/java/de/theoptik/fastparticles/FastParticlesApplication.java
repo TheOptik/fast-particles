@@ -43,7 +43,6 @@ public class FastParticlesApplication extends Application {
 
         primaryStage.show();
 
-
         primaryStage.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
             mouseX = (int) e.getX();
             mouseY = (int) e.getY();

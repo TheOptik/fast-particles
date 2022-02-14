@@ -75,7 +75,7 @@ public class Particle {
     }
 
     public void draw(int[] buffer) {
-        buffer[(int) x + WIDTH * (int) y] = 0xFF000000 | (int) (Math.abs(yVel) * 0xFF) << 8 | (int) (Math.abs(xVel) * 0xFF);
+        buffer[(int) x + WIDTH * (int) y] = 0xFF000000 | (int) (Math.abs(yVel + xVel) * 0xFF) << 16 | (int) (Math.abs(yVel) * 0xFF) << 8 | (int) (Math.abs(xVel) * 0xFF);
     }
 
     public void draw(GraphicsContext graphicsContext) {
