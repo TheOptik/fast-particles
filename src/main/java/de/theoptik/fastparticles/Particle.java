@@ -27,9 +27,9 @@ public class Particle {
         return Math.random() - 0.5;
     }
 
-    public void update(int gravX, int gravY) {
+    public void update(int gravX, int gravY, double drag) {
         updateForce(gravX, gravY);
-        updateVelocity();
+        updateVelocity(drag);
         updatePosition();
         keepParticlesInBoundry();
     }
@@ -52,11 +52,13 @@ public class Particle {
         y += yVel;
     }
 
-    private void updateVelocity() {
+    private void updateVelocity(double drag) {
         xVel += xForce;
         yVel += yForce;
         xForce = 0;
         yForce = 0;
+        xVel -= xVel * drag;
+        yVel -= yVel * drag;
     }
 
     private void keepParticlesInBoundry() {
@@ -73,7 +75,7 @@ public class Particle {
     }
 
     public void draw(int[] buffer) {
-        buffer[(int) x + WIDTH * (int) y] = 0xFF00FF00;
+        buffer[(int) x + WIDTH * (int) y] = 0xFF000000 | (int) (Math.abs(yVel) * 0xFF) << 8 | (int) (Math.abs(xVel) * 0xFF);
     }
 
     public void draw(GraphicsContext graphicsContext) {
