@@ -62,14 +62,22 @@ public class Particle {
     }
 
     private void keepParticlesInBoundry() {
-        if (x < 0 || x >= WIDTH) {
+        if (x < 0) {
             xVel *= -1;
-            x += xVel;
+            x = Math.abs(x);
+            xVel *= 0.9;
+        } else if (x >= WIDTH) {
+            xVel *= -1;
+            x = WIDTH - (x - WIDTH);
             xVel *= 0.9;
         }
-        if (y < 0 || y >= HEIGHT) {
+        if (y < 0) {
             yVel *= -1;
-            y += yVel;
+            y = Math.abs(y);
+            yVel *= 0.9;
+        } else if (y >= HEIGHT) {
+            yVel *= -1;
+            y = HEIGHT - (y - HEIGHT);
             yVel *= 0.9;
         }
     }
@@ -83,4 +91,15 @@ public class Particle {
         graphicsContext.strokeLine(x, y, x, y);
     }
 
+    @Override
+    public String toString() {
+        return "Particle{" +
+                "x=" + x +
+                ", y=" + y +
+                ", xVel=" + xVel +
+                ", yVel=" + yVel +
+                ", xForce=" + xForce +
+                ", yForce=" + yForce +
+                '}';
+    }
 }
