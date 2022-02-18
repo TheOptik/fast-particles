@@ -27,7 +27,7 @@ public class FastParticlesApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        var particles = IntStream.range(0, 50000)
                 .mapToObj((i) -> new Particle(Math.random() * WIDTH, Math.random() * HEIGHT))
                 .collect(Collectors.toList());
 
