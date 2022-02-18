@@ -4,7 +4,6 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -21,8 +20,8 @@ import static javafx.scene.image.PixelFormat.getIntArgbInstance;
 
 public class FastParticlesApplication extends Application {
 
-    private static int mouseX = WIDTH / 2;
-    private static int mouseY = HEIGHT / 2;
+    private static int mouseX = WIDTH/2;
+    private static int mouseY = HEIGHT/2;
     private static double drag = 0;
 
     public static void start(String[] args) {
@@ -32,8 +31,8 @@ public class FastParticlesApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        final var particles = IntStream.range(0, 1000000)
-                .mapToObj((i) -> new Particle(Math.random() * WIDTH, Math.random() * HEIGHT))
+        final var particles = IntStream.range(0, 500000)
+                .mapToObj((i) -> new Particle(Math.sin(i) * 600+ WIDTH/2, Math.cos(i ) * 600+ HEIGHT/2))
                 .collect(Collectors.toList());
 
         final var canvas = new Canvas(WIDTH, HEIGHT);
@@ -42,6 +41,8 @@ public class FastParticlesApplication extends Application {
         primaryStage.setScene(new Scene(root));
 
         primaryStage.show();
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
 
         primaryStage.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> {
             mouseX = (int) e.getX();
@@ -49,14 +50,14 @@ public class FastParticlesApplication extends Application {
         });
 
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, (e) -> {
-            if(e.getCode() == KeyCode.SPACE){
+            if (e.getCode() == KeyCode.SPACE) {
                 mouseX = Integer.MAX_VALUE;
                 mouseY = Integer.MAX_VALUE;
             }
-            if(e.getCode() == KeyCode.UP){
+            if (e.getCode() == KeyCode.UP) {
                 drag += 0.01;
             }
-            if(e.getCode() == KeyCode.DOWN){
+            if (e.getCode() == KeyCode.DOWN) {
                 drag -= 0.01;
             }
         });

@@ -7,6 +7,8 @@ import javafx.scene.paint.Color;
 import static de.theoptik.fastparticles.Launcher.HEIGHT;
 import static de.theoptik.fastparticles.Launcher.WIDTH;
 
+record Vector(double x, double y){};
+
 public class Particle {
 
     private double x;
@@ -36,15 +38,15 @@ public class Particle {
 
     private void updateForce(int gravX, int gravY) {
         final var force = calculateGravity(new Point2D(gravX, gravY));
-        xForce = force[0];
-        yForce = force[1];
+        xForce = force.x();
+        yForce = force.y();
     }
 
-    private double[] calculateGravity(Point2D gravityCenter) {
+    private Vector calculateGravity(Point2D gravityCenter) {
         final var dx = gravityCenter.getX() - x;
         final var dy = gravityCenter.getY() - y;
-        final var m = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-        return new double[]{dx / (m * m), dy / (m * m)};
+        final var m = Math.max(10, Math.sqrt(dx * dx + dy * dy));
+        return new Vector(dx / (m * m), dy / (m * m));
     }
 
     private void updatePosition() {
@@ -83,7 +85,7 @@ public class Particle {
     }
 
     public void draw(int[] buffer) {
-        buffer[(int) x + WIDTH * (int) y] = 0xFF000000 | (int) (Math.abs(yVel + xVel) * 0xFF) << 16 | (int) (Math.abs(yVel) * 0xFF) << 8 | (int) (Math.abs(xVel) * 0xFF);
+        buffer[(int) x + WIDTH * (int) y] = 0xFF000000 | (int) (Math.min(1,Math.abs((yVel + xVel)/2)) * 0xFF) << 16 | (int) (Math.min(1,Math.abs(yVel)) * 0xFF) << 8 | (int) (Math.min(1,Math.abs(xVel)) * 0xFF);
     }
 
     public void draw(GraphicsContext graphicsContext) {
