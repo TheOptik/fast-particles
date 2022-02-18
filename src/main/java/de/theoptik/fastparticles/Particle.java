@@ -41,7 +41,7 @@ public class Particle {
         final var force = calculateGravity(new Point2D(gravX, gravY));
         xForce = force.x();
         yForce = force.y();
-        final var index = (int) x + (int) y * WIDTH;
+        final var index = (int) x + WIDTH * (int) y;
         if (index - 1 >= 0) {
             xForce -= Math.sqrt(gravityBuffer[index - 1]);
         }
@@ -100,7 +100,9 @@ public class Particle {
 
     public void draw(int[] buffer, int[] gravityBuffer) {
         final var index = (int) x + WIDTH * (int) y;
-        buffer[index] = 0xFF000000 | (int) (Math.min(1, Math.abs((yVel + xVel) / 2)) * 0xFF) << 16 | (int) (Math.min(1, Math.abs(yVel)) * 0xFF) << 8 | (int) (Math.min(1, Math.abs(xVel)) * 0xFF);
+        var c = Color.hsb(Math.min(1,(Math.abs(yVel) + Math.abs(xVel)))*360, 1, 1);
+        buffer[index] = 0xFF000000 | ((int) (c.getRed() * 255)) << 16 | ((int) (c.getGreen() * 255)) << 8 | ((int) (c.getBlue() * 255));
+//        buffer[index] = 0xFF000000 | (int) (Math.min(1, Math.abs((yVel + xVel) / 2)) * 0xFF) << 16 | (int) (Math.min(1, Math.abs(yVel)) * 0xFF) << 8 | (int) (Math.min(1, Math.abs(xVel)) * 0xFF);
 //        buffer[index] = 0xFF00FF00;
 
         gravityBuffer[index] += 1;

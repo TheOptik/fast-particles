@@ -39,7 +39,8 @@ public class FastParticlesApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         final var particles = IntStream.range(0, 500000)
-                .mapToObj((i) -> new Particle(Math.cos(i) * 300 + WIDTH / 2, Math.sin(i) * 300 + HEIGHT / 2))
+//                .mapToObj((i) -> new Particle(Math.cos((i/500000.)*360.) * 300 + WIDTH / 2, Math.sin((i/500000.)*360.) * 300 + HEIGHT / 2))
+                .mapToObj((i) -> new Particle(Math.random() * WIDTH, Math.random() * HEIGHT))
                 .collect(Collectors.toList());
 
         final var canvas = new Canvas(WIDTH, HEIGHT);
@@ -94,7 +95,8 @@ public class FastParticlesApplication extends Application {
 
                 final var dest = new Mat(HEIGHT, WIDTH, CV_32F);
 
-                Imgproc.GaussianBlur(src2, dest, new Size(71, 71), 0);
+
+                Imgproc.GaussianBlur(src2, dest, new Size(101, 101), 0);
 
                 if (showGravityField) {
                     drawGravityField(dest, canvas);
