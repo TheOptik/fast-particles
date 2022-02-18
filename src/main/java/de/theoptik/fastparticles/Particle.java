@@ -7,6 +7,8 @@ import javafx.scene.paint.Color;
 import static de.theoptik.fastparticles.Launcher.HEIGHT;
 import static de.theoptik.fastparticles.Launcher.WIDTH;
 
+record Vector(double x, double y){};
+
 public class Particle {
 
     private double x;
@@ -27,24 +29,24 @@ public class Particle {
         return Math.random() - 0.5;
     }
 
-    public void update(int gravX, int gravY) {
+    public void update(int gravX, int gravY, double drag) {
         updateForce(gravX, gravY);
-        updateVelocity();
+        updateVelocity(drag);
         updatePosition();
         keepParticlesInBoundry();
     }
 
     private void updateForce(int gravX, int gravY) {
         final var force = calculateGravity(new Point2D(gravX, gravY));
-        xForce = force[0];
-        yForce = force[1];
+        xForce = force.x();
+        yForce = force.y();
     }
 
-    private double[] calculateGravity(Point2D gravityCenter) {
+    private Vector calculateGravity(Point2D gravityCenter) {
         final var dx = gravityCenter.getX() - x;
         final var dy = gravityCenter.getY() - y;
-        final var m = Math.max(1, Math.sqrt(dx * dx + dy * dy));
-        return new double[]{dx / (m * m), dy / (m * m)};
+        final var m = Math.max(10, Math.sqrt(dx * dx + dy * dy));
+        return new Vector(dx / (m * m), dy / (m * m));
     }
 
     private void updatePosition() {
@@ -52,28 +54,38 @@ public class Particle {
         y += yVel;
     }
 
-    private void updateVelocity() {
+    private void updateVelocity(double drag) {
         xVel += xForce;
         yVel += yForce;
         xForce = 0;
         yForce = 0;
+        xVel -= xVel * drag;
+        yVel -= yVel * drag;
     }
 
     private void keepParticlesInBoundry() {
-        if (x < 0 || x >= WIDTH) {
+        if (x < 0) {
             xVel *= -1;
-            x += xVel;
+            x = Math.abs(x);
+            xVel *= 0.9;
+        } else if (x >= WIDTH) {
+            xVel *= -1;
+            x = WIDTH - (x - WIDTH);
             xVel *= 0.9;
         }
-        if (y < 0 || y >= HEIGHT) {
+        if (y < 0) {
             yVel *= -1;
-            y += yVel;
+            y = Math.abs(y);
+            yVel *= 0.9;
+        } else if (y >= HEIGHT) {
+            yVel *= -1;
+            y = HEIGHT - (y - HEIGHT);
             yVel *= 0.9;
         }
     }
 
     public void draw(int[] buffer) {
-        buffer[(int) x + WIDTH * (int) y] = 0xFF00FF00;
+        buffer[(int) x + WIDTH * (int) y] = 0xFF000000 | (int) (Math.min(1,Math.abs((yVel + xVel)/2)) * 0xFF) << 16 | (int) (Math.min(1,Math.abs(yVel)) * 0xFF) << 8 | (int) (Math.min(1,Math.abs(xVel)) * 0xFF);
     }
 
     public void draw(GraphicsContext graphicsContext) {
@@ -81,4 +93,15 @@ public class Particle {
         graphicsContext.strokeLine(x, y, x, y);
     }
 
+    @Override
+    public String toString() {
+        return "Particle{" +
+                "x=" + x +
+                ", y=" + y +
+                ", xVel=" + xVel +
+                ", yVel=" + yVel +
+                ", xForce=" + xForce +
+                ", yForce=" + yForce +
+                '}';
+    }
 }
