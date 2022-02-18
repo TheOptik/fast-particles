@@ -40,7 +40,7 @@ public class ParticleDrawPerformanceTest {
     public void buffer() {
 
         final var buffer = new int[WIDTH * HEIGHT];
-        particles.forEach(p -> p.draw(buffer));
+        particles.forEach(p -> p.draw(buffer, buffer));
 
     }
 
@@ -49,7 +49,7 @@ public class ParticleDrawPerformanceTest {
     public void bufferStream() {
 
         final var buffer = new int[WIDTH * HEIGHT];
-        particles.stream().forEach(p -> p.draw(buffer));
+        particles.stream().forEach(p -> p.draw(buffer, buffer));
 
     }
 
@@ -58,7 +58,7 @@ public class ParticleDrawPerformanceTest {
     public void bufferParallelStream() {
 
         final var buffer = new int[WIDTH * HEIGHT];
-        particles.parallelStream().forEach(p -> p.draw(buffer));
+        particles.parallelStream().forEach(p -> p.draw(buffer, buffer));
 
     }
 }
